@@ -1,1 +1,1 @@
-from models.recommender import Similarity
+from models.recommender import Recommender

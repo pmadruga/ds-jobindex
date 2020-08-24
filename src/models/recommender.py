@@ -1,33 +1,48 @@
 from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+import time
+import os
 
 
-class Similarity():
-    # def __init__(self):
-    # self.cosine_similarity(X)
+def search(job_title, df):
+    matching_entries = [df.index[df['merged'].str.contains(
+        word, case=False)].values for word in job_title.split()]
+    return list(set(matching_entries[0]).intersection(*matching_entries))
 
-    def search(self, job_title, df):
-        matching_entries = [df.index[df['merged'].str.contains(
-            word, case=False)].values for word in job_title.split()]
-        return list(set(matching_entries[0]).intersection(*matching_entries))
 
-    def cosine_similarity(self, job_title, X, df, df_init):
-        similarity_matrix = cosine_similarity(X)
+class Recommender():
+    def determine_similarity(self, job_title, dataset_path):
+        similarity_matrix = pd.read_csv(
+            os.path.abspath(
+                os.getcwd()) +
+            '/data/processed/similarity_matrix.csv', index_col=0)
+        df = pd.read_csv(os.path.abspath(os.getcwd()) + dataset_path)
 
-        similarities = []
-        search_matching_indeces = self.search(job_title, df)
+        df['merged'] = (
+            df['title'].fillna('') + ' '
+            + df['company'].fillna('') + ' '
+            + df['location'].fillna('') + ' '
+            + df['link'].astype(str).fillna('') + ' '
+            + df['ratings_link'].fillna('') + ' '
+            + df['source'].fillna('') + ' '
+            + df['description'].fillna('') + ' '
+            + df['date'].astype(str).fillna('')
+        )
 
-        # print(search_matching_indeces)
+        len, features = similarity_matrix.shape
+        similarities = [None] * len
+
+        search_matching_indeces = search(job_title, df)
+
         for matching_index in search_matching_indeces:
             for idx, similarity_value in enumerate(
-                    similarity_matrix[matching_index]):
-                # go fetch info from each similarity value
-                # by using its index and compare with the data frame
+                    (similarity_matrix.to_numpy())[matching_index]):
 
-                similarities.append({
+                similarities[idx] = ({
                     "title": df['title'][idx],
                     "similarity": similarity_value,
-                    "description": df_init['description'][idx],
-                    "location": df_init['location'][idx],
+                    "description": df['description'][idx],
+                    "location": df['location'][idx],
                     "exact_match": True if matching_index == idx else False
                 })
 
