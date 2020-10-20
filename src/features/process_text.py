@@ -3,7 +3,8 @@ from nltk.stem.snowball import DanishStemmer
 from textblob import TextBlob
 import lemmy
 
-def preprocess_text(self, text):
+
+def preprocess_text(text):
     # text = re.sub(r'[^\w\s]', '', str(text).lower().strip())
     text = str(text).lower().strip()
 
