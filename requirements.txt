@@ -175,7 +175,6 @@ sortedcontainers==2.2.2
 soupsieve==2.0.1
 spacy==2.3.2
 SQLAlchemy==1.3.19
--e git+https://github.com/pmadruga/ds-jobindex@a920c21950434592dd32566fb5d53bdef6cc81c7#egg=src
 srsly==1.0.2
 stevedore==3.2.0
 swifter==1.0.6
