@@ -1,6 +1,7 @@
 # from nltk.corpus import stopwords
 # from nltk.stem.snowball import DanishStemmer
 from sentence_transformers import SentenceTransformer, util
+from tqdm.notebook import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import pairwise_distances_chunked
 from sklearn.metrics.pairwise import cosine_similarity
@@ -10,7 +11,6 @@ from tqdm.notebook import tqdm
 from features.process_text import preprocess_text
 
 import csv
-# import lemmy
 import nltk
 import numpy as np
 import os
@@ -18,6 +18,7 @@ import pandas as pd
 import re
 import swifter
 import time
+import torch
 
 
 class Preprocess():
@@ -94,7 +95,7 @@ class Preprocess():
         print('\n Preprocessing text')
         self.df['corpus'] = self.df['merged'].swifter.apply(
             preprocess_text)
-        self.df['title_processed'] = self.df['merged'].swifter.apply(
+        self.df['title_processed'] = self.df['title'].swifter.apply(
             preprocess_text)
 
     # def export_preprocessed(self, dataset_path):
@@ -116,13 +117,14 @@ class Preprocess():
         print('\n Creating embeddings')
         # Corpus is the bag of words
         corpus = self.df['corpus']
+        title = self.df['title']
 
         # TFIDF embeddings
         vectorizer = TfidfVectorizer(stop_words='english')
         self.tfidf_embeddings = vectorizer.fit_transform(corpus)
 
         # BERT embeddings
-        self.bert_embeddings = embedder.encode(corpus, convert_to_tensor=False)
+        self.bert_embeddings = embedder.encode(self.df['title'], convert_to_tensor=True)
 
         # Creating an index row for the distance matrix
         x, y = self.bert_embeddings.shape
@@ -133,15 +135,15 @@ class Preprocess():
         self.tfidf_distances = pairwise_distances_chunked(
             self.tfidf_embeddings, metric='cosine', n_jobs=-1)
 
-        print('\n Calculating distances - BERT')
-        self.bert_distances = pairwise_distances_chunked(
-            self.bert_embeddings, metric='cosine', n_jobs=-1)
+        # print('\n Calculating distances - BERT')
+        # self.bert_distances = pairwise_distances_chunked(
+        #     self.bert_embeddings, metric='cosine', n_jobs=-1)
 
     def export_distances_matrix(self, dataset_path):
         outname_tfidf = os.path.basename(dataset_path).split('.')[
             0] + '_distances_tfidf.csv'
         outname_bert = os.path.basename(dataset_path).split('.')[
-            0] + '_distances_bert.csv'
+            0] + '_encodings_bert.pt'
         outname_df = os.path.basename(dataset_path).split('.')[
             0] + '_preprocessed_df.csv'
 
@@ -157,7 +159,9 @@ class Preprocess():
         self.write_file(full_path_tfidf, self.tfidf_distances)
 
         # bert
-        self.write_file(full_path_bert, self.bert_distances)
+        # self.write_file(full_path_bert, self.bert_distances)
+        print('\n Storing embeddings - BERT')
+        torch.save(self.bert_embeddings, full_path_bert)
 
         # dataframe - preprocessed
         self.df.to_csv(full_path_df)
