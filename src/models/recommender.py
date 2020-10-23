@@ -1,12 +1,20 @@
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity, pairwise_kernels
-from features.process_text import preprocess_text
-import pandas as pd
-import time
-import os
-import numpy as np
-import torch
+"""
+This is DEPRECATED. The most up-to-date logic lives in the notebooks folder,
+under the search_engine_results.ipynb.
+
+This will be reinstated in case there's a need to get the search engine results via a python script (which there'is not at the moment).
+"""
+
+
+# from sklearn.metrics.pairwise import cosine_similarity
+# from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.metrics.pairwise import cosine_similarity, pairwise_kernels
+# from features.process_text import preprocess_text
+# import pandas as pd
+# import time
+# import os
+# import numpy as np
+# import torch
 
 
 # def search(job_title, df):
@@ -15,61 +23,61 @@ import torch
 #     return list(set(matching_entries[0]).intersection(*matching_entries))
 
 
-class Recommender():
-    def init(self):
-        self.agg_results_indexes = []
-        self.agg_results = []
-        self.agg_indexes = []
+# class Recommender():
+#     def init(self):
+#         self.agg_results_indexes = []
+#         self.agg_results = []
+#         self.agg_indexes = []
 
-    def load_csv(self, dataset_path):
-        """
-        These would be more performant if it were stored & read
-        from a database, instead of memory.
-        """
+#     def load_csv(self, dataset_path):
+#         """
+#         These would be more performant if it were stored & read
+#         from a database, instead of memory.
+#         """
 
-        outname_tfidf = os.path.basename(dataset_path).split('.')[
-            0] + '_distances_tfidf.csv'
+#         outname_tfidf = os.path.basename(dataset_path).split('.')[
+#             0] + '_distances_tfidf.csv'
 
-        outname_bert = os.path.basename(dataset_path).split('.')[
-            0] + '_distances_bert.csv'
+#         outname_bert = os.path.basename(dataset_path).split('.')[
+#             0] + '_distances_bert.csv'
 
-        outname_df = os.path.basename(dataset_path).split('.')[
-            0] + '_preprocessed_df.csv'
+#         outname_df = os.path.basename(dataset_path).split('.')[
+#             0] + '_preprocessed_df.csv'
 
-        print('\n Loading TFIDF distances')
-        self.df = pd.read_csv(
-            f'{os.path.abspath(os.getcwd())}/data/processed/{outname_df}',
-            index_col=0)
+#         print('\n Loading TFIDF distances')
+#         self.df = pd.read_csv(
+#             f'{os.path.abspath(os.getcwd())}/data/processed/{outname_df}',
+#             index_col=0)
 
-        print('\n Loading BERT distances')
-        self.tfidf = pd.read_csv(
-            f'{os.path.abspath(os.getcwd())}/data/processed/{outname_tfidf}',
-            index_col=0)
+#         print('\n Loading BERT distances')
+#         self.tfidf = pd.read_csv(
+#             f'{os.path.abspath(os.getcwd())}/data/processed/{outname_tfidf}',
+#             index_col=0)
 
-        print('\n Loading Processed Dataframe')
-        self.bert = pd.read_csv(
-            f'{os.path.abspath(os.getcwd())}/data/processed/{outname_bert}',
-            index_col=0)
+#         print('\n Loading Processed Dataframe')
+#         self.bert = pd.read_csv(
+#             f'{os.path.abspath(os.getcwd())}/data/processed/{outname_bert}',
+#             index_col=0)
 
-    def search_results(self, job_title):
-        matching_entries = [self.df['title_processed']
-                            .index[self.df['title_processed'].str.contains(word, case=False)]
-                            .values for word in job_title.split()]
-        return list(set(matching_entries[0]).intersection(*matching_entries))
+#     def search_results(self, job_title):
+#         matching_entries = [self.df['title_processed']
+#                             .index[self.df['title_processed'].str.contains(word, case=False)]
+#                             .values for word in job_title.split()]
+#         return list(set(matching_entries[0]).intersection(*matching_entries))
 
-    def print_direct_search_results(self):
-        print('\n DIRECT RESULTS')
-        for result in self.search_results:
-            print('- ', self.df['title'][result])
-            self.agg_results_indexes.append(result)
+#     def print_direct_search_results(self):
+#         print('\n DIRECT RESULTS')
+#         for result in self.search_results:
+#             print('- ', self.df['title'][result])
+#             self.agg_results_indexes.append(result)
 
-    def determine_similarity(self, job_title, dataset_path):
-        self.load_csv(dataset_path)
+#     def determine_similarity(self, job_title, dataset_path):
+#         self.load_csv(dataset_path)
 
-        # preprocessed text improves direct search results
-        self.direct_search_results = self.search_results(
-            preprocess_text(text=job_title))
-        self.print_direct_search_results()
+#         # preprocessed text improves direct search results
+#         self.direct_search_results = self.search_results(
+#             preprocess_text(text=job_title))
+#         self.print_direct_search_results()
 
         # df['merged'] = (
         #     df['title'].fillna('') + ' '
