@@ -1,12 +1,9 @@
-# from nltk.corpus import stopwords
-# from nltk.stem.snowball import DanishStemmer
 from sentence_transformers import SentenceTransformer, util
 from tqdm.notebook import tqdm
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import pairwise_distances_chunked
 from sklearn.metrics.pairwise import cosine_similarity
 from tensorflow.keras.metrics import CosineSimilarity
-# from textblob import TextBlob
 from tqdm.notebook import tqdm
 from features.process_text import preprocess_text
 
@@ -35,13 +32,6 @@ class Preprocess():
 
         self.export_distances_matrix(dataset_path)
 
-        # self.export_preprocessed(dataset_path)
-
-        # vectorize
-        # self.tfidf_vectorize()
-        # create similarity matrix
-        # self.generate_similarity_matrix()
-
     def load_config(self):
         tqdm.pandas()
         nltk.download('stopwords')
@@ -51,9 +41,14 @@ class Preprocess():
         self.df_init = pd.read_csv(os.path.abspath(os.getcwd()) + dataset_path)
         print('\n Dataset loaded successfuly.')
 
+    """
+    During testing, it was discovered that the 'description' feature
+    was adding more signal than noise. Hence being excluded.
+    """
+
     def filter_features(self):
         print('\n Selecting features')
-        # word bagging: merge desired features into one
+        # word bagging
         self.df_init['merged'] = (
             self.df_init['title'].fillna('') + ' '
             + self.df_init['company'].fillna('') + ' '
@@ -67,29 +62,11 @@ class Preprocess():
 
         self.df = self.df_init
 
-    # def preprocess_text(self, text):
-    #     # text = re.sub(r'[^\w\s]', '', str(text).lower().strip())
-    #     text = str(text).lower().strip()
-
-    #     # caveat: this might conflict with the english text
-    #     da_stop_words = stopwords.words('danish')
-    #     stemmer = DanishStemmer()
-    #     lemmatizer = lemmy.load("da")
-
-    #     # remove plurals
-    #     textblob = TextBlob(text)
-    #     singles = [stemmer.stem(word) for word in textblob.words]
-
-    #     # remove danish stopwords
-    #     no_stop_words = [word for word in singles if word not in da_stop_words]
-
-    #     # join text so it can be lemmatized
-    #     joined_text = " ".join(no_stop_words)
-
-    #     # lemmatization
-    #     final_text = lemmatizer.lemmatize("", joined_text)
-
-    #     return final_text[0]
+    """
+    There are two types of features created after processing text:
+    1 - corpus, which includes several original features;
+    2 - title_processed, that helps with direct search results.
+    """
 
     def preprocess(self):
         print('\n Preprocessing text')
@@ -97,18 +74,6 @@ class Preprocess():
             preprocess_text)
         self.df['title_processed'] = self.df['title'].swifter.apply(
             preprocess_text)
-
-    # def export_preprocessed(self, dataset_path):
-    #     print('\n Exporting preprocessed dataset')
-    #     outname = os.path.basename(dataset_path)
-
-    #     outdir = os.path.abspath(os.getcwd()) + '/data/processed/'
-    #     if not os.path.exists(outdir):
-    #         os.mkdir(outdir)
-
-    #     full_path = os.path.join(outdir, outname)
-    #     self.df[['bow', 'merged', 'title','description']].to_csv(full_path)
-    #     print(f'\n preprocessed dataset exported to: \n {full_path}')
 
     def create_embeddings(self):
         # Load multilingual BERT
@@ -124,7 +89,8 @@ class Preprocess():
         self.tfidf_embeddings = vectorizer.fit_transform(corpus)
 
         # BERT embeddings
-        self.bert_embeddings = embedder.encode(self.df['title'], convert_to_tensor=True)
+        self.bert_embeddings = embedder.encode(
+            self.df['title'], convert_to_tensor=True)
 
         # Creating an index row for the distance matrix
         x, y = self.bert_embeddings.shape
@@ -135,6 +101,11 @@ class Preprocess():
         self.tfidf_distances = pairwise_distances_chunked(
             self.tfidf_embeddings, metric='cosine', n_jobs=-1)
 
+        """
+        Below is deprecated distance calculation for BERT,
+        Since embeddings are created using setence-transfomers (as a tensor)
+        and the distances are calculated afterwards (in the jupyter notebook).
+        """
         # print('\n Calculating distances - BERT')
         # self.bert_distances = pairwise_distances_chunked(
         #     self.bert_embeddings, metric='cosine', n_jobs=-1)
@@ -160,6 +131,7 @@ class Preprocess():
 
         # bert
         # self.write_file(full_path_bert, self.bert_distances)
+
         print('\n Storing embeddings - BERT')
         torch.save(self.bert_embeddings, full_path_bert)
 
@@ -178,36 +150,6 @@ class Preprocess():
             for chunk in tqdm(data):
                 for item in chunk:
                     wr.writerow(item)
-
-    # def tfidf_vectorize(self):
-    #     print('\n Preprocessing')
-    #     self.df['merged'].swifter.apply(self.preprocess_text)
-    #     print('\n Vectorizing')
-    #     vectorizer = TfidfVectorizer()
-    #     self.X = vectorizer.fit_transform(self.df['merged'])
-
-    # def generate_similarity_matrix(self):
-    #     print("\n Generating similarity matrix")
-    #     similarity_matrix = cosine_similarity(self.X)
-
-    #     self.similarity_matrix_output(similarity_matrix=similarity_matrix)
-    #     return similarity_matrix
-
-    # def similarity_matrix_output(self, similarity_matrix):
-    #     print("\n Creating output of similarity matrix")
-
-    #     outname = 'similarity_matrix.csv'
-
-    #     outdir = os.path.abspath(os.getcwd()) + '/data/processed/'
-    #     if not os.path.exists(outdir):
-    #         os.mkdir(outdir)
-
-    #     fullname = os.path.join(outdir, outname)
-    #     df_matrix = pd.DataFrame(data=similarity_matrix)
-    #     df_matrix.to_csv(fullname)
-
-    # def vectorized_bag_of_words(self):
-    #     return (self.X, self.df, self.df_init)
 
 
 def load():
