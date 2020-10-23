@@ -1,4 +1,4 @@
-# Jobindex.DK Deep Learning based search engine
+# Deep Learning based search engine - Jobindex.DK case
 
 ## Abstract
 After scrapping the data from jobindex.dk - Denmark's biggest job portal - of 4.2 million jobs, a set of different Natural Language Processing techniques and Machine Learning models were applied to the data. Specifically, [TFIDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) and [BERT](https://github.com/google-research/bert) models were applied on top of a direct search (no AI).
@@ -7,9 +7,10 @@ The goal was to improve search results on a non-English data set, which was achi
 
 ## Structure
 
-This project is structured into two parts:
+The search engine is structured into two parts:
 
-1. Preprocessing of text, generation of embeddings and distance calculation
+1. Python script: preprocessing of text, generation of embeddings, distance calculation and file exporting.
+2. Jupyter notebook: Determine BERT distances and present results.
 
 ## Run
 
