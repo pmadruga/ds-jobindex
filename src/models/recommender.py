@@ -79,63 +79,63 @@ This will be reinstated in case there's a need to get the search engine results 
 #             preprocess_text(text=job_title))
 #         self.print_direct_search_results()
 
-        # df['merged'] = (
-        #     df['title'].fillna('') + ' '
-        #     + df['company'].fillna('') + ' '
-        #     + df['location'].fillna('') + ' '
-        #     + df['link'].astype(str).fillna('') + ' '
-        #     + df['ratings_link'].fillna('') + ' '
-        #     + df['source'].fillna('') + ' '
-        #     + df['description'].fillna('') + ' '
-        #     + df['date'].astype(str).fillna('')
-        # )
+# df['merged'] = (
+#     df['title'].fillna('') + ' '
+#     + df['company'].fillna('') + ' '
+#     + df['location'].fillna('') + ' '
+#     + df['link'].astype(str).fillna('') + ' '
+#     + df['ratings_link'].fillna('') + ' '
+#     + df['source'].fillna('') + ' '
+#     + df['description'].fillna('') + ' '
+#     + df['date'].astype(str).fillna('')
+# )
 
-        # len, features = similarity_matrix.shape
-        # similarities = [None] * len
+# len, features = similarity_matrix.shape
+# similarities = [None] * len
 
-        # search_matching_indeces = search(job_title, df)
+# search_matching_indeces = search(job_title, df)
 
-        # for matching_index in search_matching_indeces:
-        #     for idx, similarity_value in enumerate(
-        #             (similarity_matrix.to_numpy())[matching_index]):
+# for matching_index in search_matching_indeces:
+#     for idx, similarity_value in enumerate(
+#             (similarity_matrix.to_numpy())[matching_index]):
 
-        #         similarities[idx] = ({
-        #             "title": df['title'][idx],
-        #             "similarity": similarity_value,
-        #             "description": df['description'][idx],
-        #             "location": df['location'][idx],
-        #             "exact_match": True if matching_index == idx else False
-        #         })
+#         similarities[idx] = ({
+#             "title": df['title'][idx],
+#             "similarity": similarity_value,
+#             "description": df['description'][idx],
+#             "location": df['location'][idx],
+#             "exact_match": True if matching_index == idx else False
+#         })
 
-        # vectorizer = TfidfVectorizer(stop_words="english")
-        # X = vectorizer.fit_transform(df['bow'])
+# vectorizer = TfidfVectorizer(stop_words="english")
+# X = vectorizer.fit_transform(df['bow'])
 
-        # concat_similarities = []
+# concat_similarities = []
 
-        # search_results = search(job_title, df)
+# search_results = search(job_title, df)
 
-        # for index, result in enumerate(search_results):
-        #     distances = pairwise_kernels(X, X[result], n_jobs=-1)
-        #     # print(distance)
+# for index, result in enumerate(search_results):
+#     distances = pairwise_kernels(X, X[result], n_jobs=-1)
+#     # print(distance)
 
-        #     flat_distances = np.array(distances).flatten()
+#     flat_distances = np.array(distances).flatten()
 
-        #     for index, distance in enumerate(flat_distances):
-        #         concat_similarities.append({
-        #             'distance': float(distance),
-        #             'index': index,
-        #             'result_title': df['title'][result],
-        #             'description': df['description'][result]
-        #         })
+#     for index, distance in enumerate(flat_distances):
+#         concat_similarities.append({
+#             'distance': float(distance),
+#             'index': index,
+#             'result_title': df['title'][result],
+#             'description': df['description'][result]
+#         })
 
-        # sorted_similarities = sorted(
-        #     concat_similarities,
-        #     key=lambda k: k['distance'],
-        #     reverse=True)[
-        #     :50]
+# sorted_similarities = sorted(
+#     concat_similarities,
+#     key=lambda k: k['distance'],
+#     reverse=True)[
+#     :50]
 
 # for index,value in tqdm(enumerate(sorted_similarities)):
-    # print(value)
+# print(value)
 
-        # just return the top X similarities
-        # return sorted_similarities[:20]
+# just return the top X similarities
+# return sorted_similarities[:20]

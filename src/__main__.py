@@ -13,17 +13,18 @@ class JobRecommender():
         # if(self.args.recommend is None):
         Preprocess().init(dataset_path=self.args.process)
         # otherwise, specify an existing generated model to get job
-       
+
         # recommendations
         # else:
-            # self.recommend_jobs(self.args.recommend, self.args.path)
+        # self.recommend_jobs(self.args.recommend, self.args.path)
 
     def init_parser(self):
         parser = argparse.ArgumentParser()
 
         # parser.add_argument(
         #     '--recommend',
-        #     help="returns recommendations for the job title provided. ex: --recommend 'risk manager'.")
+        # help="returns recommendations for the job title provided. ex:
+        # --recommend 'risk manager'.")
 
         parser.add_argument(
             "--process",
