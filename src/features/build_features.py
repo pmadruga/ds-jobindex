@@ -32,10 +32,6 @@ class Preprocess():
 
         self.export_distances_matrix(dataset_path)
 
-    def load_config(self):
-        tqdm.pandas()
-        nltk.download('stopwords')
-
     def load_dataset(self, dataset_path):
         # load raw data set
         self.df_init = pd.read_csv(os.path.abspath(os.getcwd()) + dataset_path)
@@ -43,7 +39,11 @@ class Preprocess():
 
     """
     During testing, it was discovered that the 'description' feature
-    was adding more signal than noise. Hence being excluded.
+    was adding more signal than noise. Hence being excluded. Other features were
+    also removed due to its noise.
+
+    With more time, it would be interesting to investigate which features have more signal,
+    perhaps using a PCA approach or similar.
     """
 
     def filter_features(self):
@@ -57,7 +57,7 @@ class Preprocess():
             # + self.df_init['ratings_link'].fillna('') + ' '
             # + self.df_init['source'].fillna('') + ' '
             # + self.df_init['description'].fillna('') + ' '
-            + self.df_init['date'].astype(str).fillna('')
+            # + self.df_init['date'].astype(str).fillna('')
         )
 
         self.df = self.df_init
@@ -79,16 +79,20 @@ class Preprocess():
         # Load multilingual BERT
         embedder = SentenceTransformer(
             'distilbert-multilingual-nli-stsb-quora-ranking')
-        print('\n Creating embeddings')
+
+
+        
         # Corpus is the bag of words
         corpus = self.df['corpus']
         title = self.df['title']
 
         # TFIDF embeddings
+        print('\n Creating embeddings - TFIDF')
         vectorizer = TfidfVectorizer(stop_words='english')
         self.tfidf_embeddings = vectorizer.fit_transform(corpus)
 
         # BERT embeddings
+        print('\n Creating embeddings - BERT')
         self.bert_embeddings = embedder.encode(
             self.df['title'], convert_to_tensor=True)
 
