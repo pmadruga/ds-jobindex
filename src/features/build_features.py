@@ -80,8 +80,6 @@ class Preprocess():
         embedder = SentenceTransformer(
             'distilbert-multilingual-nli-stsb-quora-ranking')
 
-
-        
         # Corpus is the bag of words
         corpus = self.df['corpus']
         title = self.df['title']
