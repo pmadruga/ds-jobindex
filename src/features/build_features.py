@@ -56,7 +56,7 @@ class Preprocess():
             # + self.df_init['link'].astype(str).fillna('') + ' '
             # + self.df_init['ratings_link'].fillna('') + ' '
             # + self.df_init['source'].fillna('') + ' '
-            # + self.df_init['description'].fillna('') + ' '
+            + self.df_init['description'].fillna('') + ' '
             # + self.df_init['date'].astype(str).fillna('')
         )
 
@@ -75,28 +75,33 @@ class Preprocess():
         self.df['title_processed'] = self.df['title'].swifter.apply(
             preprocess_text)
 
-    def create_embeddings(self):
+    def calc_embeddings_bert(self):
         # Load multilingual BERT
         embedder = SentenceTransformer(
             'distilbert-multilingual-nli-stsb-quora-ranking')
-
-        # Corpus is the bag of words
-        corpus = self.df['corpus']
-        title = self.df['title']
-
-        # TFIDF embeddings
-        print('\n Creating embeddings - TFIDF')
-        vectorizer = TfidfVectorizer(stop_words='english')
-        self.tfidf_embeddings = vectorizer.fit_transform(corpus)
 
         # BERT embeddings
         print('\n Creating embeddings - BERT')
         self.bert_embeddings = embedder.encode(
             self.df['title'], convert_to_tensor=True)
 
+    def calc_embeddings_tfidf(self):
+        # Corpus is the bag of words
+        corpus = self.df['corpus']
+        title = self.df['title']
+
+        # TFIDF embeddings
+        print('\n Creating embeddings - TFIDF')
+        vectorizer = TfidfVectorizer()
+        self.tfidf_embeddings = vectorizer.fit_transform(corpus)
+
         # Creating an index row for the distance matrix
-        x, y = self.bert_embeddings.shape
+        x,y = self.tfidf_embeddings.shape
         self.index_cols = np.arange(0, x, 1).tolist()
+
+    def create_embeddings(self):
+        self.calc_embeddings_tfidf()
+        self.calc_embeddings_bert()
 
     def calculate_distances(self):
         print('\n Calculating distances - TFIDF')
@@ -147,9 +152,9 @@ class Preprocess():
             # writing the first row as the index
             wr.writerow(self.index_cols)
 
-            # iterating the generated distance matrix
+            # iterating the generated distance matrix (a generator)
             # and writing to file.
-            for chunk in tqdm(data):
+            for index, chunk in enumerate(data):
                 for item in chunk:
                     wr.writerow(item)
 
