@@ -94,9 +94,9 @@ Direct search is a simple search based on query terms. As mentioned above, if yo
 
 This numerical statistic determines the amount of times a words appears in a document, balanced by the inverse number of documents where that word appears. A word that appears a lot in one document would be balanced by how many document it appears. Simply put, considering TFIDF returns a value, if you have a word that appears once in many different documents and another that appears many times in the same document, they would have very similar values.
 
-In this project, this is then calculated for every single word of the dataset. Of course, each word will have its own vectorial representation, the denominated "word embeddings" ([further reading](https://en.wikipedia.org/wiki/Word_embedding)).
+In this project, this is calculated for every single word of the dataset. Of course, each word will have its own vectorial representation, the denominated "word embeddings" ([further reading](https://en.wikipedia.org/wiki/Word_embedding)).
 
-TFIDF is a technique that assess a word without its context.
+TFIDF is a technique that assess a word without its context. It also depends on the results of Direct Search, since it finds its closest job titles based on the direct results. If no direct results are returned, then TFIDF will also not return any result. This has to do with the way TFIDF is calculated, since it always depends on the total number of word occurrences throughout the dataset.
 
 #### Bidirectional Encoder Representations from Transformers (BERT)
 
@@ -110,9 +110,7 @@ By creating the vectorial representations of job postings it's then possible to 
 ## Results
 ---
 
-The results results from the actual jobindex.dk website are then compared with direct search, TFIDF and BERT.
-
-The direct search is a very simple approach to return direct results, as explained before. Without going into details, it's limited into one function:
+The results results from the actual jobindex.dk website are then compared with direct search, TFIDF and BERT. The direct search is a very simple approach to return direct results, as explained before. Without going into details, it's limited into one algorithm:
 
 ```
 def find_direct_results(search_query):
@@ -134,20 +132,66 @@ The [github repository](GITHUB REPO) shows the preprocessing in detail.
 
 In order to compare results, three types of examples of job searches were used. A very short query term is the first example, followed by a medium (2 words) and finished by a long query (3+ words), as show below
 
-### Example 1 - "læge neuropædiatri": 
+### Example 1 - "*kok*": 
 
-This search query roughly translates to "doctor neuropediatry".
+This search query translates as "chef".
 
-In this example, all models are compared, including also the results from jobindex. So, for this query, the results are:
+In this example, all models are compared, including also the results from jobindex, limited to a maximum of 10 results. As a reminder, below are the results of the subset of data. So, for this query, the results are:
+
+| result number | Jobindex.dk ([url](https://www.jobindex.dk/jobsoegning?maxdate=20200326&mindate=20200226&archive=1&q=kok))| Direct Search                                                                          | TFIDF                                                                         | BERT                              |
+|---------------|--------------------------------------------------------------|----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------|
+| 1             | Køkkenmedarbejder med ansvar til sommerrestaurant på Anholt  | kok eller meget erfarende cafémedarbejder                                              | kok eller meget erfarende cafémedarbejder                                     | KOK - Kolding                     |
+| 2             | Delikatesseassistent søges til MENY Hjerting                 | A la carte-kok, Scandic Copenhagen                                                     | Serveringsmedarbejder søges til Den Blå Café, Stillinge strand                | Rasleæg - SoundStoreXL.com A/S    |
+| 3             | Sygeplejerske til retspsykiatriske patienter (R1) 5. etage   | Faglært Kok søges til Folkebistroen i Odder                                            | Cafémedarbejder til ekspedition og servicering af kunder                      | Murersvend - Aarhus V             |
+| 4             | SUSHI KOK - CHEF                                             | Faglært kok søges: Brug dit håndværk og dine smagsløg vidunderligt naturligt           | D.I.I Det Blå Hus, Haurumsvej 18, 8381 Tilst søger en pædagog til Børnehaven. | Murersvend - Aarhus V             |
+| 5             | Kok/ernæringsassistent/cater til Fællesskabets Hus, Ry       | Faglært kok til barselsvikariat (tidsbegrænset)                                        | Café Europa 1989 søger tjenere med godt humør og erfaring                     | Murersvend - Haderslev            |
+| 6             | KØKKENMEDARBEJDER / KOK                                      | Faglært konditor, kok eller bager                                                      | Handicaphjælper                                                               | Nodelamper - SoundStoreXL.com A/S |
+| 7             | Naturvejleder til Uddannelse & Læring - barselsvikariat      | Endnu en fantastisk kok mangles                                                        | Køkkenmedhjælper                                                              | Sprøjtemaler - Vejen              |
+| 8             | Sygeplejerske til R1, 6. etage                               | SKIBSKOK SØGES                                                                         | Skovvænget søger en kok. Leder af vores café                                  | Vikarledsager - Ballerup          |
+| 9             | Ernæringsassistent eller kok til Børnehuset Regnskoven       | Vi søger en dygtig og madglad kok til stillingen som souschef på Frederiksbjerg Skole. | Kok søges til kantine i København K                                           | Vikarledsager - Frederiksberg     |
+| 10            | Café Sonja søger barselsvikar for køkkenchef                 | Skibskok til Fiskeristyrelsen                                                          | 2 uddannede pædagoger til vores vuggestueafdeling                             | Vikarledsager - Søborg            |
+Table: model comparison for the query "kok".
+
+Looking at the first results table, several things can be concluded:
+
+1. The results from jobindex are not bad, since a few of them include the word "kok" or "køkken". However, they are not in order. Also, they are interspersed with unrelated jobtitles, such as "Sygeplejerske" on result #3 and #8.
+2. Direct search (using the algorithm above) presents quite good results. All of the results include the word kok. 
+3. TFIDF presents relatively good results, but some noise as well. 
+4. BERT returns a lot of noise, with only one good result.
+
+The main reason for the TFIDF and BERT present noise is due to the fact that when they are processed, the description of the job postings is included. Some descriptions are not representative of the actual job title. However, the Direct Search results do not include job descriptions, hence the good results. But what happens when search queries become more specific and more complex? Let's take two more examples.
+
+### Example 2 - "*Fysioterapeut til neurorehabilitering*":
 
 
+| result number | Jobindex.dk ([url](https://www.jobindex.dk/jobsoegning?maxdate=20200326&mindate=20200226&archive=1&q=Fysioterapeut+til+Neurorehabilitering)) | Direct Search                         | TFIDF                                                                            | BERT                                                                                       |
+|---------------|-----------------------------------------------------------------------------------------------------|---------------------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| 1             | Børnehuset Harmonien søger pædagog til småbørnsstue 2,10-3,5 år                                     | Fysioterapeut til neurorehabilitering | Fysioterapeut til neurorehabilitering                                            | Fysioterapeut til neurorehabilitering                                                      |
+| 2             | 2 STÆRKE OG ERFARNE LEDERE SØGES TIL SPECIALPLEJEBOLIGER - DEMENSCENTRUM AARHUS                     |                                       | Sygeplejerske søges til Center for Neurorehabilitering Næstved                   | Overlæge i neuropædiatri                                                                   |
+| 3             | Kontrolgruppen i Holbæk Kommune søger ny kollega til forebyggelse og afdækning af socialt bedrageri |                                       | Ergoterapeut , Afsnit for Neurorehabilitering, Frederikssund                     | Neuropsykologer til Neurorehabilitering - Kbh                                              |
+| 4             | Ydelsesservice søger ny ydelseskonsulent pr. 1. maj til fleksjobområdet                             |                                       | Ergoterapeut i fast stilling til ergoterapiafsnittet Næstved sygehus             | Neuropsykolog til Klinik for Højt Specialiseret Neurorehabilitering/Traumatisk Hjerneskade |
+| 5             | Vi har brug for dig!                                                                                |                                       | Afdelings- eller overlæge til Afsnit for lungesygdomme, Næstved Sygehus          | Neurologisk fysioterapeut - barselsvikariat                                                |
+| 6             | Økonomimedarbejder søges til staben i Sundhed og Omsorg pr. 1. juni 2020                            |                                       | Fysioterapeut i Rygklinik                                                        | Faglig velfunderet fysioterapeut søges til neurologisk team                                |
+| 7             | Presse- og kommunikationskonsulent med digitalt flair                                               |                                       | Social og sundhedsassistent med lyst til tværfagligt samarbejde 32 timer pr. uge | neuropsykolog                                                                              |
+| 8             | Hjemmeplejen i Ålbæk søger social- og sundhedsassistent til dag- og aftenvagt                       |                                       | Neuropsykologer til Neurorehabilitering - Kbh                                    | Reservelæge, Neurologi                                                                     |
+| 9             | Faglig koordinator søges til Arbejdsmarkedsafdelingen i Center for Arbejdsmarked og Ydelse          |                                       | Lægesekretær Øjenafdelingen, Næstved 30-37 t./pr.uge                             | Barselsvikariat Fysioterapeut Neuroteam                                                    |
+| 10            | Social- og sundhedshjælper eller -assistent til fast nattevagt på Rosenhavens plejecenter           |                                       | Center for Neurorehabilitering(CfN) - Filadelfia søger SSA til aftenvagt         | Erfaren Neurologisk fysioterapeut til Sundhedshuset                                        |
+Table: model comparison for the query "Fysioterapeut til neurorehabilitering"
+
+When the query starts getting longer, a few interpretations can be drawn, shown in the table above:
+
+1. A few results returned via Jobindex.dk are irrelevant. Other results are the in health area but still somewhat distant from the actual query. It's even more interesting when looking at the Direct Search.
+2. Direct Search returns one result only. In fact, all the terms in the query are present in Direct Search results. This result does not appear in the Jobindex results.
+3. The first result from TFIDF is the actual query. The remainder of results are also quite relevant since they revolve around Neurorehabilitation and/or Therapists. 
+3. BERT also presents very good results. The first result matches the query and subsequent results present variations of the word "neurorehabilitering", such as "neuropædiatri", "Neurologi","Neuroteam" and "Neurologisk".
+
+It's possible to see that BERT exceeds in quality of returned results, since "neurorehabilitation" is the area of expertise, whereas TFIDF just revolves around variations of the profession. But let's see two examples where BERT exceeds on a greater margin.
+
+### Example 3 - "*Teknisk til neurorehabilitering*"
+
+With this query, there are no Direct Search results, hence no TFIDF results. For that reason, the columns were omitted below.
 
 
-
-### Example 2
-
-
-### Example 3
 
 
 
@@ -163,7 +207,8 @@ In this example, all models are compared, including also the results from jobind
 - Don't load data in memory
 - Improve model performance assessment
 - Distinguish English from Danish
-- Descriptions are not representative
+- Descriptions are not representative (represent noise)
+- TFIDF depends on direct search
 
 Conclusion
 
