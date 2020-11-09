@@ -20,17 +20,21 @@ import torch
 
 class Preprocess():
     def init(self, dataset_path):
+        # Globals
+        self.dataset_path = dataset_path
+
+        # Methods
         self.load_dataset(dataset_path)
         # removes unwanted features (ie, ratings_link)
         self.filter_features()
 
         self.preprocess()
 
+        self.export_preprocessed_df()
+
         self.create_embeddings()
 
-        self.calculate_distances()
-
-        self.export_distances_matrix(dataset_path)
+        print('\n All done!')
 
     def load_dataset(self, dataset_path):
         # load raw data set
@@ -75,6 +79,11 @@ class Preprocess():
         self.df['title_processed'] = self.df['title'].swifter.apply(
             preprocess_text)
 
+
+    def create_embeddings(self):
+        # self.calc_embeddings_tfidf()
+        self.calc_embeddings_bert()
+
     def calc_embeddings_bert(self):
         # Load multilingual BERT
         embedder = SentenceTransformer(
@@ -84,6 +93,19 @@ class Preprocess():
         print('\n Creating embeddings - BERT')
         self.bert_embeddings = embedder.encode(
             self.df['title'], convert_to_tensor=True)
+        
+        self.export_embeddings_bert()
+
+    def export_embeddings_bert(self):
+        print('\n Storing embeddings - BERT')
+        outdir = self.get_outdir()
+
+        outname_bert = os.path.basename(self.dataset_path).split('.')[
+            0] + '_encodings_bert.pt'
+
+        full_path_bert = os.path.join(outdir, outname_bert)
+
+        torch.save(self.bert_embeddings, full_path_bert)    
 
     def calc_embeddings_tfidf(self):
         # Corpus is the bag of words
@@ -99,9 +121,11 @@ class Preprocess():
         x,y = self.tfidf_embeddings.shape
         self.index_cols = np.arange(0, x, 1).tolist()
 
-    def create_embeddings(self):
-        self.calc_embeddings_tfidf()
-        self.calc_embeddings_bert()
+        # now calculate the cosine similarity
+        self.calculate_distances()
+
+        # export to file
+        self.export_distances_matrix_tfidf()
 
     def calculate_distances(self):
         print('\n Calculating distances - TFIDF')
@@ -117,21 +141,29 @@ class Preprocess():
         # self.bert_distances = pairwise_distances_chunked(
         #     self.bert_embeddings, metric='cosine', n_jobs=-1)
 
-    def export_distances_matrix(self, dataset_path):
-        outname_tfidf = os.path.basename(dataset_path).split('.')[
-            0] + '_distances_tfidf.csv'
-        outname_bert = os.path.basename(dataset_path).split('.')[
-            0] + '_encodings_bert.pt'
-        outname_df = os.path.basename(dataset_path).split('.')[
-            0] + '_preprocessed_df.csv'
-
+    def get_outdir(self):
         outdir = os.path.abspath(os.getcwd()) + '/data/processed/'
         if not os.path.exists(outdir):
             os.mkdir(outdir)
+        return outdir
 
-        full_path_tfidf = os.path.join(outdir, outname_tfidf)
-        full_path_bert = os.path.join(outdir, outname_bert)
+
+    def export_preprocessed_df(self):
+        print('\n Exporting preprocessed dataframe')
+        outname_df = os.path.basename(self.dataset_path).split('.')[
+            0] + '_preprocessed_df.csv'
+        
+        outdir = self.get_outdir()
         full_path_df = os.path.join(outdir, outname_df)
+
+        self.df.to_csv(full_path_df)
+
+    def export_distances_matrix_tfidf(self):
+        outname_tfidf = os.path.basename(self.dataset_path).split('.')[
+            0] + '_distances_tfidf.csv'
+
+        outdir = self.get_outdir()
+        full_path_tfidf = os.path.join(outdir, outname_tfidf)
 
         # tfidf
         self.write_file(full_path_tfidf, self.tfidf_distances)
@@ -139,11 +171,6 @@ class Preprocess():
         # bert
         # self.write_file(full_path_bert, self.bert_distances)
 
-        print('\n Storing embeddings - BERT')
-        torch.save(self.bert_embeddings, full_path_bert)
-
-        # dataframe - preprocessed
-        self.df.to_csv(full_path_df)
 
     def write_file(self, file_path, data):
         print(f'\n Writing distance matrix')
