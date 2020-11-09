@@ -1,7 +1,7 @@
 # Deep Learning: Applying Google's Latest Search algorithm on biggest Danish job site
 
 ## Disclaimer
---- 
+---
 This is a non-technical post however some terms are impossible to escape. For the full code, visit <GITHUB_LINK>. Some terms are not detailed in depth since it that falls outside the core goal of this project. For a technical explanation, get in touch <CONTACT_PAGE>. This report also envolves knowledge of basic Danish.
 
 ## Abstract
@@ -187,31 +187,46 @@ When the query starts getting longer, a few interpretations can be drawn, shown 
 
 It's possible to see that BERT exceeds in quality of returned results, since "neurorehabilitation" is the area of expertise, whereas TFIDF just revolves around variations of the profession. But let's see two examples where BERT exceeds on a greater margin.
 
-### Example 3 - "*Teknisk til neurorehabilitering*"
+### Example 3 - "*Tekniker til neurorehabilitering*"
 
-With this query, there are no Direct Search results, hence no TFIDF results. For that reason, the columns were omitted below.
+This query roughly translates to "Technician for neurorehabilitation". 
 
+With this query, there are no Direct Search results, hence no TFIDF results. For that reason, the columns were omitted in the table below. 
 
+| result number | Jobindex.dk ([url](https://www.jobindex.dk/jobsoegning?maxdate=20200326&mindate=20200226&archive=1&q=Tekniker+til+neurorehabilitering))                                                                                        | BERT                                                                                       |
+|---------------|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| 1             | Børnehuset Harmonien søger pædagog til småbørnsstue 2,10-3,5 år                                     | Fysioterapeut til neurorehabilitering                                                      |
+| 2             | 2 STÆRKE OG ERFARNE LEDERE SØGES TIL SPECIALPLEJEBOLIGER - DEMENSCENTRUM AARHUS                     | Neuropsykologer til Neurorehabilitering - Kbh                                              |
+| 3             | Kontrolgruppen i Holbæk Kommune søger ny kollega til forebyggelse og afdækning af socialt bedrageri | Overlæge i neuropædiatri                                                                   |
+| 4             | Ydelsesservice søger ny ydelseskonsulent pr. 1. maj til fleksjobområdet                             | Neuropsykolog til Klinik for Højt Specialiseret Neurorehabilitering/Traumatisk Hjerneskade |
+| 5             | Vi har brug for dig!                                                                                | neuropsykolog                                                                              |
+| 6             | Økonomimedarbejder søges til staben i Sundhed og Omsorg pr. 1. juni 2020                            | Neurologisk fysioterapeut - barselsvikariat                                                |
+| 7             | Presse- og kommunikationskonsulent med digitalt flair                                               | Faglig velfunderet fysioterapeut søges til neurologisk team                                |
+| 8             | Hjemmeplejen i Ålbæk søger social- og sundhedsassistent til dag- og aftenvagt                       | Udviklingskonsulent til Specialområde Hjerneskade                                          |
+| 9             | Faglig koordinator søges til Arbejdsmarkedsafdelingen i Center for Arbejdsmarked og Ydelse          | Erfaren neuropsykolog søges ved Neurologi, Aarhus Universitetshospital                     |
+| 10            | Social- og sundhedshjælper eller -assistent til fast nattevagt på Rosenhavens plejecenter           | Reservelæge, Neurologi                                                                     |                                                 |
 
+This is were BERT largely exceeds: on top of actually returning results (compared to the other model), it returns very relevant job titles. It also largely exceeds the quality when compared to the jobindex.dk results. 
 
+The word "til" ("for") in the query influences the query results, since what we want is a technician within a specific area. Thus, having results such as Fisyotherapist, doctor, or psycologist are quite relevant while still being under the Neurorehabilitation topic. 
 
-## Caveats
----
-
-
-
+<!-- ## Caveats
+--- -->
 
 ## Limitiations and Future improvements
-- Improve direct search
-- Train BERT to improve results
-- Don't load data in memory
-- Improve model performance assessment
-- Distinguish English from Danish
-- Descriptions are not representative (represent noise)
-- TFIDF depends on direct search
+
+A limitation is the processing power limited to the current machine used in this project. A more powerful machine will allow overcoming some of the difficulties, allow for future improvements. Another limitation was the quality of the description of the job titles. Despite that the results are only focusing on the job titles, its description are still relevant to achieve better embeddings. However, its quite often that descriptions don't match the job titles as such, thus creating noise. It's an explainer for some of the non-relevant results.
+
+Although the results are very promising, specially using BERT, there's still room for improvement: 
+
+- *Improve direct search algorithm*. This could be done by leveraging existing technologies that handle search (ie, Elasticsearch) which will allow for better and more performant direct search results. 
+- *Train BERT*. This project uses a pre-trained BERT algorithm. Training BERT with the Jobindex data would allow for better results.
+- *Improve model assessment*. Currently, the model performance is assessed on a _common sense_ basis. For example, if we search for "fysioterapists" and one of the results is "cook" then it's possible to infer that the result is bad. This empyrical research can - and should - be assessed in a more quantitatively way. If the model is trained using the Jobindex dataset, it will give a better numerical insight on good it is performing (by knowing how well it generalizes).
+- *Avoid using memory for calculations*. In order to get results, the preprocessed datasets were loaded into memory. Ideally, they should not, so a solution can be storing the results (the embeddings and the similarities) in a database. 
+- *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. In order to not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in a number of different ways, being one of them adding a new column to the dataset that includes the language (where this process can be automated using existing libraries for that).
 
 Conclusion
 
-- Use AI on top of traditional search
-- TFIDF succeeds in short queries
-- BERT succeeeds in 2 or more word queries
+The goal of this project is to determine wether AI can be used to improve search on Danish-language documents. The results show that not only a Deep Learning-based algorithm matches the _what you write is what you get_ algorithm - but also improves its results, by returning similar results to the ones we are searching for. Moreover, using a few approaches, it's possible to infer that BERT - Google's underlying search algorithm - not only understands similar search terms but also its context. And it also performs on non-English languages quite well.
+
+Hopefully this project paves way for companies struggling with document search in Danish and conveys the message that AI doesn't need to be a replacement to current search engines but rather the combination of both allows improving a search engine from acceptable to excelent.
