@@ -1,30 +1,49 @@
 # Deep Learning: Applying Google's Latest Search algorithm on biggest Danish job site
 
-## Disclaimer
----
-This is a non-technical post however some terms are impossible to escape. For the full code, visit <GITHUB_LINK>. Some terms are not detailed in depth since it that falls outside the core goal of this project. For a technical explanation, get in touch <CONTACT_PAGE>. This report also envolves knowledge of basic Danish.
 
 ## Abstract
 ---
-Search engine results is a common cause, especially for non-English languages. In this project, different models - including Google Search's underlying technique (called BERT) - are applied to improve the search engine of Denmark's biggest job portal: jobindex.dk. The goal is to determine whether modern Artificial Intelligence and Natural Language Processing techniques can improve danish-language searches. After comparing direct results with TFIDF and BERT, it's possible to conclude that BERT excels for zero-results search queries and on longer search queries. It also provides noteworthy performance results, in terms of time to return a search. 
+Search engine results are a common challenge, especially for non-English languages. In this project, different models - including Google Search's underlying technique - are applied to improve the search engine of Denmark's most significant job portal: [jobindex.dk](https://jobindex.dk). The goal is to determine whether modern Artificial Intelligence (AI) and Natural Language Processing (NLP) techniques can improve Danish-language search results. After comparing direct results amongst different models and methods, it's possible to conclude that BERT excels. It's incredibly successful on search queries that don't usually return results or very long and complex queries since it's based on word similarity.
+
+(UNSPLASH IMAGE)
+
+## Disclaimer
+---
+This report is unaffiliated with Jobindex.dk. 
+
+This report is also non-technical. However, some terms are impossible to escape. For the full code, visit [here](https://github.com/pmadruga/ds-jobindex). Some terms are not detailed in-depth since it that falls outside the core goal of this project and for a technical explanation or if you'd like this implemented in your company, [get in touch](https://johnconnor.ai/contact/). This report also involves knowledge of basic Danish.
 
 
 ## Intro
 ---
+Searches are a recurrent challenge, regardless of the user and/or the company. Most entities rely on direct searches of terms. If you open your e-mail application and search for a specific text, you get what you searched for. But not all inquiries are black and white: sometimes you want semantically similar results too. 
 
-Searches are a recurrent challenge, regardless of the user and/or the company. Most entities rely on direct searches of terms. If you open your e-mail application and search for a specific text, you get exactly what you searched for. But not all searches are black and white: sometimes you want similar results too. 
+When performing a direct search, there's no relation between words: the words in the search query will have to be present in the results, almost directly. Consider, for example, a job search using the query "psychiatrist" would return results with that same word. But you'd probably want to see results for jobs that include terms such as "psychiatry" and, perhaps on a lesser extent, "psychology". 
 
->  You shouldn't need perfect search skills to find what you want.
+With the classical search approach, the chances of finding both with one search query are low. What about long search queries? The chances of getting noteworthy results with a direct search are meagre. In fact, the longer the query, the lower the chances of success.
 
-When performing a direct search there's no relation between words: the words in the search query will have to be present in the results, almost directly. As an example: a job search using the query "psychiatrist" would return results with that same word. But you'd probably want to see results for jobs such "doctor in psychiatry hospital". The main word here is "psychiatry" and "psychiatrist". And the chances of finding both with one query are low. What about doing long queries? The chances of getting worthy results with a direct search are very low - the longer the query, the lower the chances of success.
+>  You shouldn't need excellent search skills to find what you want.
 
-However, recent advances in Natural Language Processing (NLP) techniques have allowed for transforming words into a common base form. For example, words like "am", "are", "is" have their common form is the word "be" (a technique known as "Stemming"). They can also convert the plural of a word to it's singular (known as "Lemmatization"). Here's an example with both techniques: "The boys are eating pizza", after being processed with the above techniques becomes "The boy is eat pizza". Applying these two techniques to documents will definitely improve search results, finding similar results to our original search query. And those techniques are part of a few others used in this project, for a mostly Danish language dataset. This project benefits from how
+However, recent advances in NLP techniques have allowed for transforming words into a common base form. For example, English words like "am", "are", "is" have their common form in the word "be" (a technique known as "Stemming"). They can also convert the plural of a word to it's singular (known as "Lemmatization"). Here's an example with both techniques: "The boys are eating pizza", after being processed with the above methods becomes "The boy is eat pizza". 
 
->  Danish NLP techniques have reached a very good level, 
+But what is this good for? Well, applying these two techniques to documents will improve search results, finding similar results to our original search query. And those techniques are part of a few others used in this project, for a mostly Danish language dataset. This project benefits from how
+
+>  Danish NLP techniques have reached an outstanding level, paving the way for improved search results
 
 when compared to English language-based ones (typically more complete).
 
-The relations between words are also important. Let's take for example (based on "https://blog.google/products/search/search-language-understanding-bert/") that you're searching for "2019 brazil traveler to usa need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveler", "usa" and "visa". But the word "to" would be ignore in this type of search, since it's too generic. In fact, the word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query.
+
+
+
+
+
+
+
+
+The relations between words are also important. Let's take for example (based on "https://blog.google/products/search/search-language-understanding-bert/"):
+
+
+ that you're searching for "2019 brazil traveler to usa need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveler", "usa" and "visa". But the word "to" would be ignore in this type of search, since it's too generic. In fact, the word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query.
 
 But there are more challenges to this then word relations.
 
@@ -85,7 +104,6 @@ And the list goes on.
 Since some job titles and descriptions were written in danish and others where written in english, it was a challenge to differentiate each, so that the preprocessing occured separately for both languages. There are a few possiblities here to disntiguish languages, such as using a language detector, but it is something left for a future iteration of this project.
 
 ### Techniques and models used
-
 #### Direct search
 
 Direct search is a simple search based on query terms. As mentioned above, if you search for the word "teacher", you'll get the results regarding job titles that have the same word included. There are no variances to this. 
@@ -205,28 +223,58 @@ With this query, there are no Direct Search results, hence no TFIDF results. For
 | 8             | Hjemmeplejen i Ålbæk søger social- og sundhedsassistent til dag- og aftenvagt                       | Udviklingskonsulent til Specialområde Hjerneskade                                          |
 | 9             | Faglig koordinator søges til Arbejdsmarkedsafdelingen i Center for Arbejdsmarked og Ydelse          | Erfaren neuropsykolog søges ved Neurologi, Aarhus Universitetshospital                     |
 | 10            | Social- og sundhedshjælper eller -assistent til fast nattevagt på Rosenhavens plejecenter           | Reservelæge, Neurologi                                                                     |                                                 |
+Table: Comparison for the query "Tekniker til neurorehabilitering"
 
 This is were BERT largely exceeds: on top of actually returning results (compared to the other model), it returns very relevant job titles. It also largely exceeds the quality when compared to the jobindex.dk results. 
 
 The word "til" ("for") in the query influences the query results, since what we want is a technician within a specific area. Thus, having results such as Fisyotherapist, doctor, or psycologist are quite relevant while still being under the Neurorehabilitation topic. 
 
-<!-- ## Caveats
---- -->
+
+### Performance comparison
+
+For this example, we're using the search query "Børne". A generic query to guarantee direct search results and TFIDF results. The BERT always returns results. Instead of analysing which results are returned by each of the models, we're going for the time it took to execute them. This performance is still assessed on the 10140 job postings sub-dataset.
+
+Below are the execution times compared:
+
+|                     | Direct Search | TFIDF | BERT |
+|---------------------|---------------|-------|------|
+| Execution time (ms) | 26.8          | 8860  | 710  |
+
+Table: Execution time for the query "Børne" per model.
+
+BERT exceeds TFIDF by a large margin. As expected Direct Search is the fastest. However, Direct Search does not return relevant results, only the _what words you search is what words you get_. The execution times can be decreased with better memory optimization and avoiding doing calculations in memory as much as possible.
+
+
+### Where BERT really exceeds
+
+Alongside the fact that BERT finds results on similar words, it also performs really well on searches with typos and locations. On the following example, a new sub-dataset of 273585 job postings was used. As a reminder, the previous sub-dataset has 10140 job postings. Since we're not using TFIDF in the following example, it becames much faster to read all the word embeddings, making BERT much more performant than other models (as shown previously). 
+
+In this example, we're searching for results for the query "advokat til ejendomme i Copenhagen". It is a mix of English and Danish, it includes a location and the most important keyword is "ejendomme" (and not "advokat"). That's because we use the "til" word in the search query hence changing priorities for our results.
+
+Here are the top 4 results:
+
+1. Jurist med speciale i fast ejendom til Københavns Ejendomme og Indkøb
+2. Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning i Københavns Ejendomme & Indkøb
+3. Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning hos Københavns Ejendomme & Indkøb
+4. Advokatfuldmægtige til København
+
+When it comes to relevance, there's a clear distinction between "ejendomme" and "advokat". "Jurist" results appear on top since what we really want is the are of expertise and not the profession itself. In last place, we have the "advokat"-related result. It's noticeable that the results prioritise Copenhagen too: even though the location in search query was in English, the results returned contain the word "Københavns/København".
 
 ## Limitiations and Future improvements
+---
 
 A limitation is the processing power limited to the current machine used in this project. A more powerful machine will allow overcoming some of the difficulties, allow for future improvements. Another limitation was the quality of the description of the job titles. Despite that the results are only focusing on the job titles, its description are still relevant to achieve better embeddings. However, its quite often that descriptions don't match the job titles as such, thus creating noise. It's an explainer for some of the non-relevant results.
 
 Although the results are very promising, specially using BERT, there's still room for improvement: 
 
-- *Improve direct search algorithm*. This could be done by leveraging existing technologies that handle search (ie, Elasticsearch) which will allow for better and more performant direct search results. 
+- *Improve direct search algorithm*. This could be done by leveraging existing technologies that handle search ([here's an example of BERT on top of Elasticsearch](https://www.sbert.net/docs/usage/semantic_search.html)) which will allow for better and more performant direct search results. 
 - *Train BERT*. This project uses a pre-trained BERT algorithm. Training BERT with the Jobindex data would allow for better results.
 - *Improve model assessment*. Currently, the model performance is assessed on a _common sense_ basis. For example, if we search for "fysioterapists" and one of the results is "cook" then it's possible to infer that the result is bad. This empyrical research can - and should - be assessed in a more quantitatively way. If the model is trained using the Jobindex dataset, it will give a better numerical insight on good it is performing (by knowing how well it generalizes).
 - *Avoid using memory for calculations*. In order to get results, the preprocessed datasets were loaded into memory. Ideally, they should not, so a solution can be storing the results (the embeddings and the similarities) in a database. 
-- *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. In order to not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in a number of different ways, being one of them adding a new column to the dataset that includes the language (where this process can be automated using existing libraries for that).
+- *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. In order to not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in a number of different ways, being one of them adding a new column to the dataset that includes the language (where this process can be automated using existing libraries).
 
-Conclusion
-
-The goal of this project is to determine wether AI can be used to improve search on Danish-language documents. The results show that not only a Deep Learning-based algorithm matches the _what you write is what you get_ algorithm - but also improves its results, by returning similar results to the ones we are searching for. Moreover, using a few approaches, it's possible to infer that BERT - Google's underlying search algorithm - not only understands similar search terms but also its context. And it also performs on non-English languages quite well.
+## Conclusion
+---
+The goal of this project is to determine wether AI can be used to improve search on Danish-language documents. The results show that not only a Deep Learning-based algorithm matches the _what you write is what you get_ algorithm - but also improves its results, by returning similar results to the ones we are searching for. Moreover, using a few approaches, it's possible to infer that BERT - Google's underlying search algorithm - not only understands similar search terms but also its context. All while performing quite well on non-English languages. All in all, Google's BERT algorithm improves search results and performance, compared to all other models, and does it on non-English languages too.
 
 Hopefully this project paves way for companies struggling with document search in Danish and conveys the message that AI doesn't need to be a replacement to current search engines but rather the combination of both allows improving a search engine from acceptable to excelent.
