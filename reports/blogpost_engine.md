@@ -16,11 +16,15 @@ This report is also non-technical. However, some terms are impossible to escape.
 
 ## Intro
 ---
-Searches are a recurrent challenge, regardless of the user and/or the company. Most entities rely on direct searches of terms. If you open your e-mail application and search for a specific text, you get what you searched for. But not all inquiries are black and white: sometimes you want semantically similar results too. 
+Searches are a recurrent challenge, regardless of the user and/or the company. Most entities rely on direct searches of terms. If you open your e-mail application and search for a specific text, you get what you searched for. If you searched for the word "receipts", you'll get emails that contain that exact same word.
 
-When performing a direct search, there's no relation between words: the words in the search query will have to be present in the results, almost directly. Consider, for example, a job search using the query "psychiatrist" would return results with that same word. But you'd probably want to see results for jobs that include terms such as "psychiatry" and, perhaps on a lesser extent, "psychology". 
+But not all inquiries are black and white: sometimes you want semantically similar results too. 
 
-With the classical search approach, the chances of finding both with one search query are low. What about long search queries? The chances of getting noteworthy results with a direct search are meagre. In fact, the longer the query, the lower the chances of success.
+<!-- In the example above, you probably want to have in the results that contain the word "purchases" too, which is semantically similar to the word "receipt". -->
+
+In the classical search engine - the non-AI and the most common today -, when performing a direct search, there's no relation between words. The words in the search query will have to be present in the results, almost directly. Consider, for example, a job search using the query "psychiatrist" would return results with that same word. But you'd probably want to see results for jobs that include terms such as "psychiatry" and, perhaps on a lesser extent, "psychology". Probably not on the top of the search results, but still very close to it. 
+
+With the classical search approach, the chances of finding both with one search query are low. And what about long search queries? There, the chances of getting noteworthy results with a direct search are meagre. In fact, the longer the query, the lower the chances of success.
 
 >  You shouldn't need excellent search skills to find what you want.
 
@@ -40,20 +44,21 @@ when compared to English language-based ones (typically more complete).
 
 
 
-The relations between words are also important. Let's take for example (based on "https://blog.google/products/search/search-language-understanding-bert/"):
+The relations between words are also important. Let's take, for example (based on "https://blog.google/products/search/search-language-understanding-bert/"), you're searching for "2019 brazil traveller to usa need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveller", "usa" and "visa". But the word "to" would be ignored in a direct type of search, since the word "to" it's too generic. The word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query, as you can see below:
 
+![Search results](https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Query-2019BrazilTravelerToUSANeedAVisa.max-1000x1000.jpg "Difference in Search Results before and after using BERT").
 
- that you're searching for "2019 brazil traveler to usa need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveler", "usa" and "visa". But the word "to" would be ignore in this type of search, since it's too generic. In fact, the word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query.
+It's important to convey that the results from the "before" image are powered by much more that just pure term match. 
 
-But there are more challenges to this then word relations.
+But there are more challenges to this then word relations. The above shows English language examples. Non-English languages pose a challenge in terms of Machine Learning challenges since there's not as much data to train models when compared to the English language. However, recent breakthroughs allow having good model results, even in multilingual approaches, including Danish. That's where BERT comes in. BERT is ["a neural network-based technique for natural language processing (NLP) pre-training called Bidirectional Encoder Representations from Transformers"](https://blog.google/products/search/search-language-understanding-bert/). This model allows for a contextual representation of words, meaning that context matters when doing searches. 
 
-The above shows english language examples. Non-english languages pose a challenge in terms of Machine Learning challenges, since there's not as much data to train models when compared to the english language. However, recent breakthroughs allows having good model results, even in multilingual approaches, including Danish. That's where BERT comes in. BERT is "a neural network-based technique for natural language processing (NLP) pre-training called Bidirectional Encoder Representations from Transformers" (https://blog.google/products/search/search-language-understanding-bert/). This model allows for contextual representation of words. In other words, context matters. Remember the travelling example from above. 
+Remember the travelling example from above. The search results on the right take the word "to" into account which changes the accuracy of these results.
 
-The above techniques set the foundations for this project, since they are part of a toolset to make search engine results better using document similarity. Ultimately, 
+The above techniques set the foundations for this project since they are part of a toolset to make search engine results better using document similarity. 
 
-> the goal of this project is to determine what role does AI and Machine Learning bring to document searchs, how it combines with existing searches (instead of replacing it) and how it performs in non-English languages.
+Ultimately, 
 
-
+> the goal of this project is to determine what role does AI and Machine Learning bring to document searches, how it combines with existing searches (instead of replacing it) and how it performs in non-English languages.
 
 
 ## Methodology
@@ -61,7 +66,9 @@ The above techniques set the foundations for this project, since they are part o
 
 ### The dataset
 
-The dataset is comprised of 4.2m jobs from jobindex.dk, from 2000 until March 2020. Here's an excerpt of the dataset:
+The dataset is comprised of 4.2m jobs from jobindex.dk, from 2000 until March 2020.
+
+Here's an excerpt of the dataset:
 
 |    | title                                                                            | location   | description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | company               | date       |
 |---:|:---------------------------------------------------------------------------------|:-----------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:-----------|
