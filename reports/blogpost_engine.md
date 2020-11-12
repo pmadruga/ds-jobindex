@@ -1,6 +1,5 @@
 # Deep Learning: Applying Google's Latest Search algorithm on biggest Danish job site
 
-
 ## Abstract
 ---
 Search engine results are a common challenge, especially for non-English languages. In this project, different models - including Google Search's underlying technique - are applied to improve the search engine of Denmark's most significant job portal: [jobindex.dk](https://jobindex.dk). The goal is to determine whether modern Artificial Intelligence (AI) and Natural Language Processing (NLP) techniques can improve Danish-language search results. After comparing direct results amongst different models and methods, it's possible to conclude that BERT excels. It's incredibly successful on search queries that don't usually return results or very long and complex queries since it's based on word similarity.
