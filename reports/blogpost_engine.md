@@ -10,7 +10,7 @@ Search engine results are a common challenge, especially for non-English languag
 ---
 This report is unaffiliated with Jobindex.dk. 
 
-This report is also non-technical. However, some terms are impossible to escape. For the full code, visit [here](https://github.com/pmadruga/ds-jobindex). Some terms are not detailed in-depth since it that falls outside the core goal of this project and for a technical explanation or if you'd like this implemented in your company, [get in touch](https://johnconnor.ai/contact/). This report also involves knowledge of basic Danish.
+This report tries to be as non-technical as possible. However, some technical terms are impossible to escape. For the full code, visit [here](https://github.com/pmadruga/ds-jobindex). Some terms are not detailed in-depth since it that falls outside the core goal of this project and for a technical explanation or if you'd like this implemented in your company, [get in touch](https://johnconnor.ai/contact/). This report also involves knowledge of basic Danish.
 
 
 ## Intro
@@ -36,36 +36,29 @@ But what is this good for? Well, applying these two techniques to documents will
 when compared to English language-based ones (typically more complete).
 
 
-
-
-
-
-
-
-
-The relations between words are also important. Let's take, for example (based on "https://blog.google/products/search/search-language-understanding-bert/"), you're searching for "2019 brazil traveller to usa need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveller", "usa" and "visa". But the word "to" would be ignored in a direct type of search, since the word "to" it's too generic. The word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query, as you can see below:
+The relations between words are also important. Let's take, for example (based on "https://blog.google/products/search/search-language-understanding-bert/"). You're searching for "2019 brazil traveller to USA need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveller", "USA" and "visa". But the word "to" would be ignored in a direct type of search, since the word "to" it's too generic. The word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query, as you can see below:
 
 ![Search results](https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Query-2019BrazilTravelerToUSANeedAVisa.max-1000x1000.jpg "Difference in Search Results before and after using BERT").
 
-It's important to convey that the results from the "before" image are powered by much more that just pure term match. 
+It's essential to convey that the results from the "before" image are powered by much more than just pure term match. 
 
-But there are more challenges to this then word relations. The above shows English language examples. Non-English languages pose a challenge in terms of Machine Learning challenges since there's not as much data to train models when compared to the English language. However, recent breakthroughs allow having good model results, even in multilingual approaches, including Danish. That's where BERT comes in. BERT is ["a neural network-based technique for natural language processing (NLP) pre-training called Bidirectional Encoder Representations from Transformers"](https://blog.google/products/search/search-language-understanding-bert/). This model allows for a contextual representation of words, meaning that context matters when doing searches. 
+But there are more hurdles to this then word relations. There's also the handling of different languages. Non-English languages pose a challenge since there's not as much data to train Machine Learning models when compared to the English language. 
 
-Remember the travelling example from above. The search results on the right take the word "to" into account which changes the accuracy of these results.
+However, recent breakthroughs allow having good model results, even in multilingual approaches, including Danish. That's where BERT comes in. BERT is ["a neural network-based technique for natural language processing (NLP) pre-training called Bidirectional Encoder Representations from Transformers"](https://blog.google/products/search/search-language-understanding-bert/). This model allows for a contextual representation of words, meaning that context matters when doing searches and an excellent example for that is that the one from above. In that example, not only the individual words are important but also its relation to the other words in the same search query. Plus, when taking the word "to" into account changes the accuracy of these results.
 
-The above techniques set the foundations for this project since they are part of a toolset to make search engine results better using document similarity. 
+All in all, the above techniques set the foundations for this project as they are part of a toolset to make search engine results better using document similarity. 
 
-Ultimately, 
+In short, 
 
-> the goal of this project is to determine what role does AI and Machine Learning bring to document searches, how it combines with existing searches (instead of replacing it) and how it performs in non-English languages.
-
+> in this project, we are comparing results from the models (both AI-based and not) and the current results given in the Jobindex.dk's website. We are determining how does AI leverage existing document searches, even for non-English languages, such as Danish.
+ 
 
 ## Methodology
 ---
 
 ### The dataset
 
-The dataset is comprised of 4.2m jobs from jobindex.dk, from 2000 until March 2020.
+The dataset is comprised of 4.2m jobs from jobindex.dk, from 2000 until March 2020. 
 
 Here's an excerpt of the dataset:
 
@@ -78,22 +71,22 @@ Here's an excerpt of the dataset:
 |  4 | Lærere til mellemtrinnet på Møn skole - afdelingen i Stege                       | nan        | Vordingborg KommuneHar du tæft for specialpædagogisk virke og inkluderende læringsmiljøer, og vil du indgå i forpligtende kollegiale læringsfællesskaber? Så er Møn skole stedet for dig.  På Møn skole har vi pr. 1/5-20 en fast stilling og en barselsstilling ledig på mellemtrinnet på afdelingen i Stege.  Vi søger to fagligt dygtige lærere, der er kompetente til at undervise i flere af fagene dansk, engelsk, kristendom, musik, håndværk og design og som kan undervise på fleksible hold med elever med behov for specialpædagogisk bistand.  Det forventes, at du som ansøger har it- og iPad-kundskaber på brugerniveau. Det forventes yderligere, at du er indstillet på at arbejde med bevægelse, CL-strukturer og co-teaching i undervisningen.                                                                | Vordingborg Kommune   | 2020-03-09 |
 
 
-_Title_, _location_, _description_ and _date_ are some of the features in the original dataset. The remainder were excluded since they don't provide signal to the project at hand. Some of the entries have empty rows for certain features. This is due to some difficulty upon scraping the data.
+_Title_, _location_, _description_ and _date_ are some of the features in the original dataset. The remainder is excluded since they don't provide a signal to the project at hand. Some of the entries have empty rows for certain features, due to some difficulty upon scraping the data.
 
 ### The hardware
 
-The computations were made in a Macbook Pro 2016 model.
+The computations are made in a Macbook Pro 2016 model.
 
 ### Preprocessing
 
-The preprocessing of text task included several subtasks:
+The preprocessing included several subtasks:
 
 1. Lower casing of words
 2. Lemmatization
 3. Stemming
 4. Removing stop words in Danish
 
-Apart from lemmatization and stemming - already explained in the Introduction - it's necessary to remove stop words. Stop words are common words on a given language. Some of the danish stop words are: 
+Apart from lemmatization and stemming - already explained in the Introduction - it's necessary to remove stop words. Stop words are common words in a given language. Some of the danish stop words are: 
 
 ```
 'og',
@@ -107,7 +100,7 @@ Apart from lemmatization and stemming - already explained in the Introduction - 
 
 And the list goes on.
 
-Since some job titles and descriptions were written in danish and others where written in english, it was a challenge to differentiate each, so that the preprocessing occured separately for both languages. There are a few possiblities here to disntiguish languages, such as using a language detector, but it is something left for a future iteration of this project.
+Since some job titles and descriptions are in danish and others are written in English, it was a challenge to differentiate each, so that the preprocessing occurred separately for both languages. There are a few possibilities here to distinguish languages, such as using a language detector, but it is something left for a future iteration of this project.
 
 ### Techniques and models used
 #### Direct search
@@ -116,25 +109,25 @@ Direct search is a simple search based on query terms. As mentioned above, if yo
 
 #### Term Frequency–Inverse Document Frequency (TFIDF) 
 
-This numerical statistic determines the amount of times a words appears in a document, balanced by the inverse number of documents where that word appears. A word that appears a lot in one document would be balanced by how many document it appears. Simply put, considering TFIDF returns a value, if you have a word that appears once in many different documents and another that appears many times in the same document, they would have very similar values.
+This numerical statistic determines the number of times a word appears in a document, balanced by the inverse number of documents where that word appears. A word that often appears in one document would be balanced by how many documents it occurs. Considering TFIDF returns a value if you have a word that occurs once in many different documents and another that appears many times in the same document, they would have very similar values.
 
-In this project, this is calculated for every single word of the dataset. Of course, each word will have its own vectorial representation, the denominated "word embeddings" ([further reading](https://en.wikipedia.org/wiki/Word_embedding)).
+In this project, this is calculated for every single word of the dataset. Of course, each word will have its own vectorial representation - the denominated "word embeddings" ([further reading](https://en.wikipedia.org/wiki/Word_embedding)).
 
-TFIDF is a technique that assess a word without its context. It also depends on the results of Direct Search, since it finds its closest job titles based on the direct results. If no direct results are returned, then TFIDF will also not return any result. This has to do with the way TFIDF is calculated, since it always depends on the total number of word occurrences throughout the dataset.
+TFIDF is a technique that assesses a word without its context. It also depends on the results of Direct Search, since it finds its closest job titles based on the direct results. If no direct results are returned, then TFIDF will also not return any result. This has to do with the way TFIDF is calculated since it always depends on the total number of word occurrences throughout the dataset.
 
 #### Bidirectional Encoder Representations from Transformers (BERT)
 
-BERT is a pre-trained open-source language model, as an outcome from a [paper](https://arxiv.org/abs/1810.04805v2) published in 2018 by the researchers at Google. BERT introduces a contextual bidirectional approach. Simply put, it looks at a setence and its context by "reading" it from left to right and right to left. [Further reading here](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html).
-
-In this project, and due to computational limitations, BERT was not trained again using Jobindex's data. 
+BERT is a pre-trained open-source language model, as an outcome from a [paper](https://arxiv.org/abs/1810.04805v2) published in 2018 by the researchers at Google. BERT introduces a bidirectional contextual approach. Simply put, it looks at a sentence and its context by "reading" it from left to right and right to left and converts into vectors ("embeddings"). [Further reading here](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html). 
 
 ### Model assessment
-By creating the vectorial representations of job postings it's then possible to compare how similar then are with one another. This similarity is determined via 'cosine similarity' ([Further reading here](https://en.wikipedia.org/wiki/Cosine_similarity)) and all the distances are stored in a distance matrix. 
+
+By creating the vectorial representation of job postings, it's then possible to compare how similar than are with one another. This similarity is determined via 'cosine similarity' ([Further reading here](https://en.wikipedia.org/wiki/Cosine_similarity)) and all the distances are stored in a distance matrix.
+
 
 ## Results
 ---
 
-The results results from the actual jobindex.dk website are then compared with direct search, TFIDF and BERT. The direct search is a very simple approach to return direct results, as explained before. Without going into details, it's limited into one algorithm:
+The results results from the actual jobindex.dk website are then compared with direct search, TFIDF and BERT techniques. The direct search is a very simple approach to return direct results, as explained before. Without going into details, it's limited into one algorithm in this project:
 
 ```
 def find_direct_results(search_query):
@@ -144,23 +137,23 @@ def find_direct_results(search_query):
 ```
 
 
-Obviously, today there are very advanced techniques and libraries that work very well. As mentioned before, the goal is to determine on can AI leverage existing search techniques.
+Today there are very advanced techniques and libraries that work very well. As mentioned before, the goal is to determine whether AI can leverage existing search techniques.
 
-However, it was not possible to perform computations on the whole dataset due to its size. This is mainly because when storing the distances from TFIDF, it creates a distance matrix of 4.2m rows x 4.2m colums (resulting in 1.764e+13 cells), making it impossible to store in disk on the current machine used and virtually impossible to store in memory on any machine. A possiblity to tackle this challenge is presented in the Future Improvements chapter later on. 
+However, it was not possible to perform computations on the whole dataset due to its size. It's because when storing the distances between vectors from TFIDF, it creates a distance matrix of 4.2m rows x 4.2m column (resulting in 1.764e+13 cells), making it impossible to store on the disk of the current machine used and virtually impossible to store in memory on any common machine. A possibility to tackle this challenge is presented in the Future Improvements chapter later on. 
 
-The short-term solution was to create slice of the original dataset. Thus, a dataset comprised of all the datasets between 2020-02-26 and 2020-03-26 (inc.) was created. This results in dataset with the size of 10140 job postings.
+The short-term solution was to create a slice of the original dataset. Thus, a dataset comprised of all the datasets between 2020-02-26 and 2020-03-26 (inc.) is created, which results in a dataset with the size of 10140 job postings.
 
-BERT however, was handled in a slightly different way than the TFIDF approach. A file with all the embeddings (of the above subset of data) is created and later on imported in memory. The reason why the last step before getting recommendations from BERT is handled in memory is because of its internal optimizations (since it uses tensors, instead of regular arrays). Being able to quickly load and sort a dataset of around 10k rows is one of the advantages from BERT when compared to TFIDF. Of course, for bigger datasets, a better form of handling would be to have disk persistance. 
+BERT, on the other hand, was handled in a slightly different way than the TFIDF approach. A file with all the embeddings is created and later on imported into memory. The reason why the last step before getting recommendations from BERT is handled in memory is because of its internal optimizations (since it uses tensors, instead of regular arrays). These optimizations make it much faster to run in memory. Being able to quickly load and sort a dataset of around ten thousand rows is one of the advantages from BERT when compared to TFIDF. Of course, for bigger datasets, a better form of handling would be to have disk persistence. 
 
-The [github repository](GITHUB REPO) shows the preprocessing in detail.
+The [github repository](https://github.com/pmadruga/ds-jobindex) shows the preprocessing in detail.
 
-In order to compare results, three types of examples of job searches were used. A very short query term is the first example, followed by a medium (2 words) and finished by a long query (3+ words), as show below
+A few different types of examples of job searches are used to compare the different approaches. A concise query term is the first example, followed by a medium (2 words) and finished by a long query (3+ words), as shown below:
 
 ### Example 1 - "*kok*": 
 
 This search query translates as "chef".
 
-In this example, all models are compared, including also the results from jobindex, limited to a maximum of 10 results. As a reminder, below are the results of the subset of data. So, for this query, the results are:
+In this example, all models are compared, including also the results from Jobindex.dk, limited to a maximum of 10 results. As a reminder, below are the results of the subset of data. So, for this query, the results are:
 
 | result number | Jobindex.dk ([url](https://www.jobindex.dk/jobsoegning?maxdate=20200326&mindate=20200226&archive=1&q=kok))| Direct Search                                                                          | TFIDF                                                                         | BERT                              |
 |---------------|--------------------------------------------------------------|----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-----------------------------------|
@@ -176,14 +169,14 @@ In this example, all models are compared, including also the results from jobind
 | 10            | Café Sonja søger barselsvikar for køkkenchef                 | Skibskok til Fiskeristyrelsen                                                          | 2 uddannede pædagoger til vores vuggestueafdeling                             | Vikarledsager - Søborg            |
 Table: model comparison for the query "kok".
 
-Looking at the first results table, several things can be concluded:
+Several conclusions are drawn from studying the first results table:
 
-1. The results from jobindex are not bad, since a few of them include the word "kok" or "køkken". However, they are not in order. Also, they are interspersed with unrelated jobtitles, such as "Sygeplejerske" on result #3 and #8.
+1. The results from Jobindex.dk are not bad, since a few of them include the word "kok" or "køkken". However, they are not in order. Also, they are interspersed with unrelated job titles, such as "Sygeplejerske" on result #3 and #8.
 2. Direct search (using the algorithm above) presents quite good results. All of the results include the word kok. 
 3. TFIDF presents relatively good results, but some noise as well. 
 4. BERT returns a lot of noise, with only one good result.
 
-The main reason for the TFIDF and BERT present noise is due to the fact that when they are processed, the description of the job postings is included. Some descriptions are not representative of the actual job title. However, the Direct Search results do not include job descriptions, hence the good results. But what happens when search queries become more specific and more complex? Let's take two more examples.
+The main reason for the TFIDF and BERT present noise is because when they are processed, the description of the job postings is included. Some descriptions are not representative of the actual job title. However, the Direct Search results do not include job descriptions, hence the good results. But what happens when search queries become more specific and more complex? Let's take two more examples.
 
 ### Example 2 - "*Fysioterapeut til neurorehabilitering*":
 
@@ -202,20 +195,20 @@ The main reason for the TFIDF and BERT present noise is due to the fact that whe
 | 10            | Social- og sundhedshjælper eller -assistent til fast nattevagt på Rosenhavens plejecenter           |                                       | Center for Neurorehabilitering(CfN) - Filadelfia søger SSA til aftenvagt         | Erfaren Neurologisk fysioterapeut til Sundhedshuset                                        |
 Table: model comparison for the query "Fysioterapeut til neurorehabilitering"
 
-When the query starts getting longer, a few interpretations can be drawn, shown in the table above:
+When the search query ("Fysioterapeut til neurorehabilitering", in this case) starts getting longer, a few interpretations can be drawn, shown in the table above:
 
-1. A few results returned via Jobindex.dk are irrelevant. Other results are the in health area but still somewhat distant from the actual query. It's even more interesting when looking at the Direct Search.
-2. Direct Search returns one result only. In fact, all the terms in the query are present in Direct Search results. This result does not appear in the Jobindex results.
-3. The first result from TFIDF is the actual query. The remainder of results are also quite relevant since they revolve around Neurorehabilitation and/or Therapists. 
-3. BERT also presents very good results. The first result matches the query and subsequent results present variations of the word "neurorehabilitering", such as "neuropædiatri", "Neurologi","Neuroteam" and "Neurologisk".
+1. A few results returned via Jobindex.dk are irrelevant. The remaining results are in the health sector but still somewhat distant from the actual query. 
+2. Direct Search returns one result only since all the terms in the query are present in Direct Search results, but not more than those. This Direct Search result does not appear in the Jobindex results.
+3. The first result from TFIDF is the actual query. The remainder of the results is also quite relevant since they revolve around Neurorehabilitation and/or Therapists. It's the first example where we get similar results to the actual query, without using words from the initial query.
+3. BERT also presents outstanding results. The first result matches the query and subsequent results demonstrate variations of the word "neurorehabilitering", such as "neuropædiatri", "Neurologi","Neuroteam" and "Neurologisk". 
 
-It's possible to see that BERT exceeds in quality of returned results, since "neurorehabilitation" is the area of expertise, whereas TFIDF just revolves around variations of the profession. But let's see two examples where BERT exceeds on a greater margin.
+It's now possible to see that BERT exceeds in the quality of returned results. Specifically, the word  "neurorehabilitation" is the area of expertise.  
+
+On the other hand, TFIDF revolves around variations of the profession, hence losing track of what matters, which is the "neurorehabilitation" sector. But let's see two examples where BERT exceeds on a more significant margin.
 
 ### Example 3 - "*Tekniker til neurorehabilitering*"
 
-This query roughly translates to "Technician for neurorehabilitation". 
-
-With this query, there are no Direct Search results, hence no TFIDF results. For that reason, the columns were omitted in the table below. 
+This query roughly translates to "Technician for neurorehabilitation". With this query, there are no Direct Search results, hence no TFIDF results. For that reason, the table below omits Direct Search and TFIDF columns.
 
 | result number | Jobindex.dk ([url](https://www.jobindex.dk/jobsoegning?maxdate=20200326&mindate=20200226&archive=1&q=Tekniker+til+neurorehabilitering))                                                                                        | BERT                                                                                       |
 |---------------|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
@@ -231,14 +224,16 @@ With this query, there are no Direct Search results, hence no TFIDF results. For
 | 10            | Social- og sundhedshjælper eller -assistent til fast nattevagt på Rosenhavens plejecenter           | Reservelæge, Neurologi                                                                     |                                                 |
 Table: Comparison for the query "Tekniker til neurorehabilitering"
 
-This is were BERT largely exceeds: on top of actually returning results (compared to the other model), it returns very relevant job titles. It also largely exceeds the quality when compared to the jobindex.dk results. 
+This is were BERT vastly exceeds: on top of actually returning results (compared to the previously mentioned approaches), it yields very relevant job titles. It also vastly exceeds the quality when compared to the Jobindex.dk results. 
 
-The word "til" ("for") in the query influences the query results, since what we want is a technician within a specific area. Thus, having results such as Fisyotherapist, doctor, or psycologist are quite relevant while still being under the Neurorehabilitation topic. 
+The word "til" ("for") in the query again influences the query results since what we want is a technician within a specific area. Thus, having results such as a physiotherapist, doctor or psychologist are quite relevant while still being under the Neurorehabilitation topic. 
 
 
 ### Performance comparison
 
-For this example, we're using the search query "Børne". A generic query to guarantee direct search results and TFIDF results. The BERT always returns results. Instead of analysing which results are returned by each of the models, we're going for the time it took to execute them. This performance is still assessed on the 10140 job postings sub-dataset.
+For this example, we're using the search query "Børne". It's a generic query to guarantee direct search results and TFIDF results, thus making it possible to perform comparisons. 
+
+The BERT model always returns results. Instead of analysing which each of the models returns results, we're going for the time it took to execute them. This performance is still assessed on the 10140 job postings sub-dataset.
 
 Below are the execution times compared:
 
@@ -248,23 +243,25 @@ Below are the execution times compared:
 
 Table: Execution time for the query "Børne" per model.
 
-BERT exceeds TFIDF by a large margin. As expected Direct Search is the fastest. However, Direct Search does not return relevant results, only the _what words you search is what words you get_. The execution times can be decreased with better memory optimization and avoiding doing calculations in memory as much as possible.
+BERT exceeds TFIDF by a large margin. As expected, Direct Search is the fastest. However, Direct Search does not usually return relevant results, only the _what words you search is what words you get_. The execution times can be decreased with better memory optimisation and avoiding doing calculations in memory as much as possible.
 
 
-### Where BERT really exceeds
+### Where BERT excels
 
-Alongside the fact that BERT finds results on similar words, it also performs really well on searches with typos and locations. On the following example, a new sub-dataset of 273585 job postings was used. As a reminder, the previous sub-dataset has 10140 job postings. Since we're not using TFIDF in the following example, it becames much faster to read all the word embeddings, making BERT much more performant than other models (as shown previously). 
+Alongside the fact that BERT finds results on similar words, it also performs strongly on searches with typos and locations. 
 
-In this example, we're searching for results for the query "advokat til ejendomme i Copenhagen". It is a mix of English and Danish, it includes a location and the most important keyword is "ejendomme" (and not "advokat"). That's because we use the "til" word in the search query hence changing priorities for our results.
+In the following example, a new sub-dataset of 273585 job postings was used. As a reminder, the previous sub-dataset has 10140 job postings. Since we're not using TFIDF in the following example, it becomes much faster to create and read all the word embeddings, making BERT much more performant than other models (as shown previously). 
 
-Here are the top 4 results:
+In this example, we're searching for results for the query "advokat til ejendomme i Copenhagen". It is a mix of English and Danish, it includes a location, and the most important keyword is "ejendomme" (and not "advokat"). That's because we use the "til" word in the search query hence changing priorities for our results.
 
-1. Jurist med speciale i fast ejendom til Københavns Ejendomme og Indkøb
-2. Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning i Københavns Ejendomme & Indkøb
-3. Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning hos Københavns Ejendomme & Indkøb
-4. Advokatfuldmægtige til København
+Here are the top four results:
 
-When it comes to relevance, there's a clear distinction between "ejendomme" and "advokat". "Jurist" results appear on top since what we really want is the are of expertise and not the profession itself. In last place, we have the "advokat"-related result. It's noticeable that the results prioritise Copenhagen too: even though the location in search query was in English, the results returned contain the word "Københavns/København".
+1. _Jurist med speciale i fast ejendom til Københavns Ejendomme og Indkøb_
+2. _Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning i Københavns Ejendomme & Indkøb_
+3. _Jurist med kendskab til erhvervslejeret og fast ejendom til Udlejning hos Københavns Ejendomme & Indkøb_
+4. _Advokatfuldmægtige til København_
+
+When it comes to relevance, there's a clear distinction between "ejendomme" and "advokat". "Jurist" results appear on top since what we want is the are of expertise and not the profession itself. In the last place, we have the "advokat"-related result. It's noticeable that the results prioritise Copenhagen too: even though the location in search query was in English, the results returned contain the word "Københavns/København". 
 
 ## Limitiations and Future improvements
 ---
@@ -278,6 +275,7 @@ Although the results are very promising, specially using BERT, there's still roo
 - *Improve model assessment*. Currently, the model performance is assessed on a _common sense_ basis. For example, if we search for "fysioterapists" and one of the results is "cook" then it's possible to infer that the result is bad. This empyrical research can - and should - be assessed in a more quantitatively way. If the model is trained using the Jobindex dataset, it will give a better numerical insight on good it is performing (by knowing how well it generalizes).
 - *Avoid using memory for calculations*. In order to get results, the preprocessed datasets were loaded into memory. Ideally, they should not, so a solution can be storing the results (the embeddings and the similarities) in a database. 
 - *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. In order to not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in a number of different ways, being one of them adding a new column to the dataset that includes the language (where this process can be automated using existing libraries).
+- *Improve variations of search queries*. A common used word in the queries is "til" and future tests should have a wider range of conjunctions.
 
 ## Conclusion
 ---
