@@ -263,19 +263,21 @@ Here are the top four results:
 
 When it comes to relevance, there's a clear distinction between "ejendomme" and "advokat". "Jurist" results appear on top since what we want is the are of expertise and not the profession itself. In the last place, we have the "advokat"-related result. It's noticeable that the results prioritise Copenhagen too: even though the location in search query was in English, the results returned contain the word "Københavns/København". 
 
-## Limitiations and Future improvements
+## Limitations and Future improvements
 ---
 
-A limitation is the processing power limited to the current machine used in this project. A more powerful machine will allow overcoming some of the difficulties, allow for future improvements. Another limitation was the quality of the description of the job titles. Despite that the results are only focusing on the job titles, its description are still relevant to achieve better embeddings. However, its quite often that descriptions don't match the job titles as such, thus creating noise. It's an explainer for some of the non-relevant results.
+One of the limitations is the processing power limited to the current machine used in this project. A more powerful machine will allow overcoming some of the difficulties, thus allowing future improvements on all of the approaches taken above. 
 
-Although the results are very promising, specially using BERT, there's still room for improvement: 
+Another limitation was the quality of the description of the job titles. Despite that the results are only focusing on the job titles, its description is still relevant to achieve better embeddings. However, its quite often that the job descriptions don't represent job titles as such, thus creating noise in the data. It's an explainer for some of the non-relevant results.
 
-- *Improve direct search algorithm*. This could be done by leveraging existing technologies that handle search ([here's an example of BERT on top of Elasticsearch](https://www.sbert.net/docs/usage/semantic_search.html)) which will allow for better and more performant direct search results. 
-- *Train BERT*. This project uses a pre-trained BERT algorithm. Training BERT with the Jobindex data would allow for better results.
-- *Improve model assessment*. Currently, the model performance is assessed on a _common sense_ basis. For example, if we search for "fysioterapists" and one of the results is "cook" then it's possible to infer that the result is bad. This empyrical research can - and should - be assessed in a more quantitatively way. If the model is trained using the Jobindex dataset, it will give a better numerical insight on good it is performing (by knowing how well it generalizes).
-- *Avoid using memory for calculations*. In order to get results, the preprocessed datasets were loaded into memory. Ideally, they should not, so a solution can be storing the results (the embeddings and the similarities) in a database. 
-- *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. In order to not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in a number of different ways, being one of them adding a new column to the dataset that includes the language (where this process can be automated using existing libraries).
-- *Improve variations of search queries*. A common used word in the queries is "til" and future tests should have a wider range of conjunctions.
+Although the results are promising, especially using BERT, there's still room for improvement, such as: 
+
+- *Improve direct search algorithm*. Can be done by leveraging existing technologies that handle search which will allow for better and more performant direct search results. [Here's an example of BERT on top of Elasticsearch](https://www.sbert.net/docs/usage/semantic_search.html) 
+- *Train BERT*. This project uses a pre-trained BERT algorithm. Training BERT with the Jobindex data will most certainly yield better results.
+- *Improve model assessment*. Currently, the model performance is assessed on a _common sense_ basis. For example, if we search for "fysioterapists" and one of the results is "cook" then it's possible to infer that the result is not good. This observational research can - and should - be evaluated in a more quantitatively way. If the model is trained using the Jobindex dataset (as suggested before), it will give a better numerical insight on how strong it is performing (by knowing how well it generalizes).
+- *Avoid using memory for calculations*. In order to get results, the preprocessed datasets were loaded into memory. Ideally, they should not for performance reasons so that a solution can be storing the results (the embeddings and the similarities) in a database. Alternatively (and probably ideally) the best solution is to serve the custom trained BERT model.
+- *Improve language distinction*. The preprocessing step includes handling danish text. However, some job postings and its descriptions are in English as well. Mixed-language job postings make it harder to preprocess its text. To not use preprocessing text techniques on the _wrong_ language, there should be a better distinction between languages. This can be done in many different ways, being one of them adding a new column to the dataset that includes the language in question. It still doesn't solve the issue of job postings where the title is in Danish (for example) and the description in English, or vice-versa. Or the cases were the job description is mixed-language.
+- *Improve variations of search queries*. A commonly used word in the search queries of this project is "til", and future tests should have a broader range of conjunctions.
 
 ## Conclusion
 ---
