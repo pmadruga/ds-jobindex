@@ -281,6 +281,11 @@ Although the results are promising, especially using BERT, there's still room fo
 
 ## Conclusion
 ---
-The goal of this project is to determine wether AI can be used to improve search on Danish-language documents. The results show that not only a Deep Learning-based algorithm matches the _what you write is what you get_ algorithm - but also improves its results, by returning similar results to the ones we are searching for. Moreover, using a few approaches, it's possible to infer that BERT - Google's underlying search algorithm - not only understands similar search terms but also its context. All while performing quite well on non-English languages. All in all, Google's BERT algorithm improves search results and performance, compared to all other models, and does it on non-English languages too.
+The goal of this project was to determine whether AI can be used to improve search on Danish-language documents. The results show that not only a Deep Learning-based algorithm matches conventional search techniques but drastically enhances those. It excels on long and complex queries and finds results on cases were classical search finds none.
 
-Hopefully this project paves way for companies struggling with document search in Danish and conveys the message that AI doesn't need to be a replacement to current search engines but rather the combination of both allows improving a search engine from acceptable to excelent.
+Moreover, using a few approaches, it's possible to infer that BERT - 
+Google's underlying search Deep Learning algorithm - understands not only similar searches terms but also its context. All while performing exceptionally well on non-English languages. 
+
+Hopefully, this project paves the way to success for companies struggling with document search in Danish. It conveys the message that 
+
+> AI doesn't need to be a replacement to current search engines but rather the combination of both, which allows improving a search engine from adequate to excellent.
