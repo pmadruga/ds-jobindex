@@ -38,7 +38,7 @@ when compared to English language-based ones (typically more complete).
 
 The relations between words are also important. Let's take, for example (based on "https://blog.google/products/search/search-language-understanding-bert/"). You're searching for "2019 brazil traveller to USA need a visa.". You'd probably get a result that includes the words "2019", "brazil", "traveller", "USA" and "visa". But the word "to" would be ignored in a direct type of search, since the word "to" it's too generic. The word "to" changes everything in this, since it refers to where the person wants to travel to (from Brazil to the US). This results in very different outcomes of the search query, as you can see below:
 
-![Search results](https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Query-2019BrazilTravelerToUSANeedAVisa.max-1000x1000.jpg "Difference in Search Results before and after using BERT").
+![Search results](https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Query-2019BrazilTravelerToUSANeedAVisa.max-1000x1000.jpg "Difference in Search Results before and after using BERT")
 
 It's essential to convey that the results from the "before" image are powered by much more than just pure term match. 
 
@@ -51,7 +51,7 @@ All in all, the above techniques set the foundations for this project as they ar
 In short, 
 
 > in this project, we are comparing results from the models (both AI-based and not) and the current results given in the Jobindex.dk's website. We are determining how does AI leverage existing document searches, even for non-English languages, such as Danish.
- 
+
 
 ## Methodology
 ---
