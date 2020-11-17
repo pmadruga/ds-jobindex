@@ -79,7 +79,6 @@ class Preprocess():
         self.df['title_processed'] = self.df['title'].swifter.apply(
             preprocess_text)
 
-
     def create_embeddings(self):
         # self.calc_embeddings_tfidf()
         self.calc_embeddings_bert()
@@ -93,7 +92,7 @@ class Preprocess():
         print('\n Creating embeddings - BERT')
         self.bert_embeddings = embedder.encode(
             self.df['title'], convert_to_tensor=True)
-        
+
         self.export_embeddings_bert()
 
     def export_embeddings_bert(self):
@@ -105,7 +104,7 @@ class Preprocess():
 
         full_path_bert = os.path.join(outdir, outname_bert)
 
-        torch.save(self.bert_embeddings, full_path_bert)    
+        torch.save(self.bert_embeddings, full_path_bert)
 
     def calc_embeddings_tfidf(self):
         # Corpus is the bag of words
@@ -118,7 +117,7 @@ class Preprocess():
         self.tfidf_embeddings = vectorizer.fit_transform(corpus)
 
         # Creating an index row for the distance matrix
-        x,y = self.tfidf_embeddings.shape
+        x, y = self.tfidf_embeddings.shape
         self.index_cols = np.arange(0, x, 1).tolist()
 
         # now calculate the cosine similarity
@@ -147,12 +146,11 @@ class Preprocess():
             os.mkdir(outdir)
         return outdir
 
-
     def export_preprocessed_df(self):
         print('\n Exporting preprocessed dataframe')
         outname_df = os.path.basename(self.dataset_path).split('.')[
             0] + '_preprocessed_df.csv'
-        
+
         outdir = self.get_outdir()
         full_path_df = os.path.join(outdir, outname_df)
 
@@ -170,7 +168,6 @@ class Preprocess():
 
         # bert
         # self.write_file(full_path_bert, self.bert_distances)
-
 
     def write_file(self, file_path, data):
         print(f'\n Writing distance matrix')
