@@ -135,7 +135,7 @@ pycairo==1.19.1
 pycodestyle==2.6.0
 pyconll==2.3.1
 pycparser==2.20
-Pygments==2.6.1
+Pygments==2.7.4
 PyGObject==3.38.0
 pyparsing==2.4.7
 pyrsistent==0.16.0
