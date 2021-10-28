@@ -77,7 +77,7 @@ jupyter-console==6.1.0
 jupyter-contrib-core==0.3.3
 jupyter-core==4.6.3
 jupyter-nbextensions-configurator==0.4.1
-jupyterlab==2.2.0
+jupyterlab==2.2.10
 jupyterlab-server==1.2.0
 Keras==2.2.4
 Keras-Applications==1.0.8
