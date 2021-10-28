@@ -28,7 +28,7 @@ cycler==0.10.0
 cymem==2.0.3
 da-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/da_core_news_lg-2.3.0/da_core_news_lg-2.3.0.tar.gz
 danlp==0.0.9
-dask==2.25.0
+dask==2021.10.0
 dask-distance==0.2.0
 decorator==4.4.2
 defusedxml==0.6.0
