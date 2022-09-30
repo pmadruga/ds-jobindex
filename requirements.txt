@@ -68,7 +68,7 @@ jedi==0.17.2
 Jinja2==2.11.3
 jinja2-time==0.2.0
 jmespath==0.10.0
-joblib==0.16.0
+joblib==1.2.0
 json5==0.9.5
 jsonschema==3.2.0
 jupyter==1.0.0
